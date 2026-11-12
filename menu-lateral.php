@@ -22,11 +22,19 @@ $paginasCargo = [
 ];
 $menuCargoActivo = in_array($paginaActual, $paginasCargo);
 
+// Páginas del menú Configuración > Tarifa
+$paginasTarifa = [
+    'tarifa.php',
+    'lista-tarifa.php'
+];
+$menuTarifaActivo = in_array($paginaActual, $paginasTarifa);
+
 // Páginas del menú Configuración, merge agrega mas opciones al vector
 $paginasConfiguracion = array_merge(
     $paginasRuta,
     $paginasCanton,
     $paginasCargo,
+    $paginasTarifa,
     ['empresa.php', 'editors.php']
 );
 
@@ -67,6 +75,13 @@ $paginasMedidor = [
 ];
 
 $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
+
+// Páginas del menú Lectura
+$paginasLectura = [
+    'lectura.php'
+];
+
+$menuLecturaActivo = in_array($paginaActual, $paginasLectura);
 
 ?>
 
@@ -186,6 +201,31 @@ $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
                             </ul>
                         </li>
 
+                        <!-- TARIFA -->
+                        <li class="nav-item <?= $menuTarifaActivo ? 'menu-open' : '' ?>">
+                            <a href="#" class="nav-link <?= $menuTarifaActivo ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-cash-stack"></i>
+                                <p>
+                                    Tarifa
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="tarifa.php" class="nav-link <?= $paginaActual == 'tarifa.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-file-earmark-plus"></i>
+                                        <p>Nueva Tarifa</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="lista-tarifa.php" class="nav-link <?= $paginaActual == 'lista-tarifa.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-list"></i>
+                                        <p>Consultar</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </li>
 
@@ -284,6 +324,25 @@ $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
                             <a href="lista-medidores.php" class="nav-link <?= $paginaActual == 'lista-medidores.php' ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-list"></i>
                                 <p>Consulta</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- LECTURA -->
+                <li class="nav-item <?= $menuLecturaActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuLecturaActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-file-spreadsheet"></i>
+                        <p>
+                            Lectura
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="lectura.php" class="nav-link <?= $paginaActual == 'lectura.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>Nueva</p>
                             </a>
                         </li>
                     </ul>
