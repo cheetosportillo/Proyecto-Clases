@@ -249,3 +249,46 @@ function getNumeroContrato($conexion)
 
     return $numero + 1;
 }
+
+// En DAOContrato.php (Nueva opcion: consultarMedidor)
+if ($opcion == "consultarMedidor") {
+    require_once "../Config/Conexion.php";
+
+    $sql = "SELECT c.idcontrato, s.idsocio, s.dui, s.nombre, s.apellido, c.ncontrato, c.fecha,
+                   m.nmedidor, m.lectura_inicial,
+                   COALESCE(NULLIF(m.idcanton, ''), 0) AS idcanton,
+                   COALESCE(NULLIF(m.idruta, ''), 0) AS idruta,
+                   m.direccion, m.referencia, m.idmedidor, m.estado
+            FROM contrato AS c
+            INNER JOIN socio AS s ON s.idsocio = c.idsocio
+            LEFT JOIN medidor AS m ON c.idcontrato = m.idcontrato
+            WHERE c.idcontrato = ?";
+
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $idcontrato);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows > 0) {
+        $fila = $resultado->fetch_assoc();
+        echo json_encode([
+            "estado" => true,
+            "datos" => [
+                'idcontrato' => $fila['idcontrato'],
+                'dui'        => $fila['dui'],
+                'nombre'     => $fila['nombre'],
+                'apellido'   => $fila['apellido'],
+                'direccion'  => $fila['direccion'],
+                'referencia' => $fila['referencia'],
+                'idcanton'   => $fila['idcanton'],
+                'idruta'     => $fila['idruta'],
+                'nmedidor'   => $fila['nmedidor'],
+                'inicio'     => $fila['lectura_inicial'],
+                'ncontrato'  => $fila['ncontrato'],
+                'fecha'      => $fila['fecha'],
+                'idmedidor'  => $fila['idmedidor'],
+                'estado'     => $fila['estado']
+            ]
+        ], JSON_UNESCAPED_UNICODE);
+    }
+}
