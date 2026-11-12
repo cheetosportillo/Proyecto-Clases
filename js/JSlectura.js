@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const inputNMedidor = document.getElementById("nmedidor");
+    const btnBuscarMedidor = document.getElementById("btnBuscarMedidor");
     const inputIdMedidor = document.getElementById("idmedidor");
     const inputSocio = document.getElementById("socio");
     const inputCanton = document.getElementById("canton");
@@ -47,42 +48,67 @@ document.addEventListener("DOMContentLoaded", () => {
         const nmedidor = inputNMedidor.value.trim();
         if (!nmedidor) return;
 
-        Swal.fire({ title: "Buscando...", didOpen: () => Swal.showLoading() });
-        const res = await fetch("DAOLectura.php", {
-            method: "POST",
-            body: new URLSearchParams({ opcion: "consultarConsumo", nmedidor })
-        });
-        const json = await res.json();
-        Swal.close();
+        inputIdMedidor.value = "";
+        inputSocio.value = "";
+        inputCanton.value = "";
+        inputRuta.value = "";
+        inputDireccion.value = "";
+        inputLecturaActual.value = "";
+        inputLecturaAnterior.value = "";
+        inputFechaAnterior.value = "";
 
-        if (json.estado) {
-            inputIdMedidor.value = json.datos.idmedidor;
-            inputSocio.value = json.datos.socio;
-            inputCanton.value = json.datos.canton;
-            inputRuta.value = json.datos.ruta;
-            inputDireccion.value = json.datos.direccion;
-            inputLecturaAnterior.value = json.datos.lectura_anterior;
-            inputFechaAnterior.value = json.datos.fecha_anterior || "";
-            inputLecturaActual.value = "";
-            inputLecturaActual.focus();
-        } else {
-            Swal.fire("Error", json.mensaje || "Medidor no encontrado", "error");
+        Swal.fire({ title: "Buscando...", didOpen: () => Swal.showLoading() });
+        let datosMedidor;
+        let errorBusqueda;
+
+        try {
+            const respuesta = await fetch("DAOLectura.php", {
+                method: "POST",
+                body: new URLSearchParams({ opcion: "consultarConsumo", nmedidor })
+            });
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok || !resultado.estado) {
+                throw new Error(resultado.mensaje || `Error HTTP ${respuesta.status}`);
+            }
+            datosMedidor = resultado.datos;
+        } catch (error) {
+            console.error(error);
+            errorBusqueda = error;
+        } finally {
+            Swal.close();
         }
+
+        if (errorBusqueda) {
+            await Swal.fire("No se pudo buscar el medidor", errorBusqueda.message, "error");
+            inputNMedidor.focus();
+            return;
+        }
+
+        inputIdMedidor.value = datosMedidor.idmedidor;
+        inputSocio.value = datosMedidor.socio;
+        inputCanton.value = datosMedidor.canton;
+        inputRuta.value = datosMedidor.ruta;
+        inputDireccion.value = datosMedidor.direccion;
+        inputLecturaAnterior.value = datosMedidor.lectura_anterior;
+        inputFechaAnterior.value = datosMedidor.fecha_anterior || "";
+        inputLecturaActual.focus();
     }
 
     inputNMedidor.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            buscarMedidor();
+            void buscarMedidor();
         }
     });
+    btnBuscarMedidor.addEventListener("click", () => void buscarMedidor());
 
     // Guardar Lectura
     btnGuardar.addEventListener("click", async () => {
-        const actual = parseInt(inputLecturaActual.value, 10);
-        const anterior = parseInt(inputLecturaAnterior.value || "0", 10);
+        const actual = parseFloat(inputLecturaActual.value);
+        const anterior = parseFloat(inputLecturaAnterior.value || "0");
 
-        if (isNaN(actual)) {
+        if (!Number.isFinite(actual)) {
             Swal.fire("Atención", "Ingrese la lectura actual", "warning");
             return;
         }

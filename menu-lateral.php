@@ -29,12 +29,19 @@ $paginasTarifa = [
 ];
 $menuTarifaActivo = in_array($paginaActual, $paginasTarifa);
 
+// Configuración del tiraje de números de recibos
+$paginasTiraje = [
+    'tiraje.php'
+];
+$menuTirajeActivo = in_array($paginaActual, $paginasTiraje);
+
 // Páginas del menú Configuración, merge agrega mas opciones al vector
 $paginasConfiguracion = array_merge(
     $paginasRuta,
     $paginasCanton,
     $paginasCargo,
     $paginasTarifa,
+    $paginasTiraje,
     ['empresa.php', 'editors.php']
 );
 
@@ -224,6 +231,14 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+
+                        <!-- NÚMEROS DE RECIBOS -->
+                        <li class="nav-item">
+                            <a href="tiraje.php" class="nav-link <?= $menuTirajeActivo ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-currency-dollar"></i>
+                                <p>Número Recibos</p>
+                            </a>
                         </li>
 
                     </ul>

@@ -80,23 +80,23 @@
           <div class="row">
             <div class="col-12 col-md-6">
               <div class="form-floating mb-3">
-                <select class="form-select" id="canton" name="canton"><option value="0">[SELECCIONE]</option></select>
+                <select class="form-select" id="canton" name="canton" required><option value="0">[SELECCIONE]</option></select>
                 <label for="canton">Seleccione Cantón (*)</label>
               </div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-floating mb-3">
-                <select class="form-select" id="ruta" name="ruta"><option value="0">[SELECCIONE]</option></select>
+                <select class="form-select" id="ruta" name="ruta" required><option value="0">[SELECCIONE]</option></select>
                 <label for="ruta">Seleccione Ruta (*)</label>
               </div>
             </div>
           </div>
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección Exacta (*)" />
+            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección Exacta (*)" required />
             <label for="direccion">Dirección Exacta del Medidor (*)</label>
           </div>
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="referencia" name="referencia" placeholder="Punto de Referencia (*)" />
+            <input type="text" class="form-control" id="referencia" name="referencia" placeholder="Punto de Referencia (*)" required />
             <label for="referencia">Punto de Referencia de la Ubicación (*)</label>
           </div>
         </div>
@@ -110,19 +110,19 @@
           <div class="row">
             <div class="col-12 col-md-6">
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="nmedidor" name="nmedidor" placeholder="N° Medidor (*)" />
+                <input type="text" class="form-control" id="nmedidor" name="nmedidor" placeholder="N° Medidor (*)" maxlength="50" required />
                 <label for="nmedidor">N° Medidor (*)</label>
               </div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="inicio" name="inicio" placeholder="Metros Iniciales (*)" inputmode="numeric" />
+                <input type="number" class="form-control" id="inicio" name="inicio" placeholder="Metros Iniciales (*)" min="0" step="0.01" required />
                 <label for="inicio">Metros Iniciales (*)</label>
               </div>
             </div>
           </div>
           <div class="form-floating mb-3">
-            <select class="form-select" id="estado" name="estado">
+            <select class="form-select" id="estado" name="estado" required>
               <option value="0">[SELECCIONE]</option>
               <option value="Activo">Activo</option>
               <option value="Suspendido">Suspendido</option>

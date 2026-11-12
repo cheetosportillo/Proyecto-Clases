@@ -51,7 +51,7 @@
                     <div class="row">
                       <div class="col-6 mb-3">
                         <label class="form-label fw-bold">Lectura Actual (*)</label>
-                        <input type="number" class="form-control form-control-lg" id="lectura_actual" required />
+                        <input type="number" class="form-control form-control-lg" id="lectura_actual" min="0" step="0.01" required />
                       </div>
                       <div class="col-6 mb-3">
                         <label class="form-label">Lectura Anterior</label>

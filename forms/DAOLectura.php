@@ -1,35 +1,67 @@
 <?php
+header("Content-Type: application/json; charset=utf-8");
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 $opcion = $_POST['opcion'] ?? '';
 
-if ($opcion == "consultarConsumo") {
+if ($opcion === "consultarConsumo") {
     require_once "../Config/Conexion.php";
-    $nmedidor = $_POST['nmedidor'] ?? '';
+    $nmedidor = trim($_POST['nmedidor'] ?? '');
+    $stmt = null;
 
-    $sql = "SELECT m.idmedidor, concat(s.nombre, ' ', s.apellido) AS socio, m.nmedidor, m.estado, 
-                   co.fecha_lectura AS fecha_anterior,
-                   IF(co.lectura_actual IS NULL, m.lectura_inicial, co.lectura_actual) AS lectura_anterior,
-                   ca.nombre AS canton, ru.nombre AS ruta, m.direccion
-            FROM medidor AS m
-            INNER JOIN contrato AS c ON c.idcontrato = m.idcontrato
-            INNER JOIN socio AS s ON s.idsocio = c.idsocio
-            INNER JOIN canton AS ca ON (ca.id_canton = m.idcanton OR ca.idcanton = m.idcanton)
-            INNER JOIN ruta AS ru ON (ru.idRuta = m.idruta OR ru.idruta = m.idruta)
-            LEFT JOIN consumo AS co ON co.idmedidor = m.idmedidor
-            WHERE m.nmedidor = ?
-            ORDER BY co.idconsumo DESC LIMIT 1";
+    try {
+        if ($nmedidor === '') {
+            http_response_code(400);
+            throw new InvalidArgumentException("Ingrese el número del medidor");
+        }
 
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $nmedidor);
-    $stmt->execute();
-    $res = $stmt->get_result();
+        $sql = "SELECT m.idmedidor, CONCAT(s.nombre, ' ', s.apellido) AS socio,
+                       m.nmedidor, m.estado, co.fecha_lectura AS fecha_anterior,
+                       COALESCE(co.lectura_actual, m.lectura_inicial) AS lectura_anterior,
+                       ca.nombre AS canton, ru.nombre AS ruta, m.direccion
+                FROM medidor AS m
+                INNER JOIN contrato AS c ON c.idcontrato = m.idcontrato
+                INNER JOIN socio AS s ON s.idsocio = c.idsocio
+                INNER JOIN canton AS ca ON ca.id_canton = m.idcanton
+                INNER JOIN ruta AS ru ON ru.idRuta = m.idruta
+                LEFT JOIN consumo AS co ON co.idmedidor = m.idmedidor
+                WHERE m.nmedidor = ?
+                ORDER BY co.idconsumo DESC
+                LIMIT 1";
 
-    if ($row = $res->fetch_assoc()) {
-        echo json_encode(["estado" => true, "datos" => $row], JSON_UNESCAPED_UNICODE);
-    } else {
-        echo json_encode(["estado" => false, "mensaje" => "Medidor no encontrado"]);
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $nmedidor);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $fila = $resultado->fetch_assoc();
+
+        if (!$fila) {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "No se encontró un medidor con ese número"
+            ], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode([
+                "estado" => true,
+                "datos" => $fila
+            ], JSON_UNESCAPED_UNICODE);
+        }
+    } catch (Throwable $e) {
+        if (!($e instanceof InvalidArgumentException)) {
+            error_log("Error al buscar medidor para lectura: " . $e->getMessage());
+            http_response_code(500);
+        }
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    } finally {
+        if ($stmt instanceof mysqli_stmt) {
+            $stmt->close();
+        }
+        $conexion->close();
     }
-    $stmt->close();
-    $conexion->close();
+    exit;
 }
 
 if ($opcion == "guardar") {
@@ -41,8 +73,8 @@ if ($opcion == "guardar") {
         $idempleado        = $_POST['idempleado'] ?? '';
         $fecha_lectura     = $_POST['fecha_lectura'] ?? '';
         $fecha_anterior    = !empty($_POST['fecha_anterior']) ? $_POST['fecha_anterior'] : null;
-        $lectura_anterior  = isset($_POST['lectura_anterior']) ? intval($_POST['lectura_anterior']) : 0;
-        $lectura_actual    = isset($_POST['lectura_actual']) ? intval($_POST['lectura_actual']) : 0;
+        $lectura_anterior  = isset($_POST['lectura_anterior']) ? (float)$_POST['lectura_anterior'] : 0.0;
+        $lectura_actual    = isset($_POST['lectura_actual']) ? (float)$_POST['lectura_actual'] : 0.0;
         $fecha_vencimiento = !empty($_POST['fecha_vencimiento']) ? $_POST['fecha_vencimiento'] : null;
         $aviso             = $_POST['aviso'] ?? '';
         $mes               = isset($_POST['mes']) ? intval($_POST['mes']) : 0;
@@ -52,7 +84,7 @@ if ($opcion == "guardar") {
         $sql = "INSERT INTO consumo (idmedidor, idempleado, fecha_lectura, fecha_anterior, lectura_anterior, lectura_actual, fecha_vencimiento, aviso, mes, anio, estado) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("iissiisssis", $idmedidor, $idempleado, $fecha_lectura, $fecha_anterior, $lectura_anterior, $lectura_actual, $fecha_vencimiento, $aviso, $mes, $anio, $estado);
+        $stmt->bind_param("iissddssiis", $idmedidor, $idempleado, $fecha_lectura, $fecha_anterior, $lectura_anterior, $lectura_actual, $fecha_vencimiento, $aviso, $mes, $anio, $estado);
 
         if ($stmt->execute()) {
             echo json_encode(["estado" => true, "mensaje" => "Lectura Registrada Correctamente"]);

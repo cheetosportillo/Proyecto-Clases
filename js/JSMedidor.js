@@ -12,14 +12,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         inicio: document.getElementById("inicio"),
         estado: document.getElementById("estado")
     };
+    const formulario = document.getElementById("formulario");
     const btnGuardar = document.getElementById("btnGuardar");
+    const btnCancelar = document.getElementById("btnCancelar");
 
     async function consultar(url, datos, descripcion) {
         const respuesta = await fetch(url, { method: "POST", body: datos });
+        const resultado = await respuesta.json();
         if (!respuesta.ok) {
-            throw new Error(`Error HTTP ${respuesta.status} al ${descripcion}`);
+            throw new Error(resultado.mensaje || `Error HTTP ${respuesta.status} al ${descripcion}`);
         }
-        return respuesta.json();
+        return resultado;
     }
 
     async function cargarOpciones(url, select, idCampo) {
@@ -36,6 +39,58 @@ document.addEventListener("DOMContentLoaded", async () => {
             select.add(new Option(opcion.nombre, opcion[idCampo]));
         });
     }
+
+    btnGuardar.addEventListener("click", async () => {
+        if (!formulario.reportValidity()) return;
+
+        if (campos.canton.value === "0" || campos.ruta.value === "0" || campos.estado.value === "0") {
+            await Swal.fire("Revisa los datos", "Selecciona el cantón, la ruta y el estado del medidor.", "warning");
+            return;
+        }
+
+        const modificando = Boolean(btnGuardar.dataset.idmedidor);
+        const lecturaInicial = Number(campos.inicio.value);
+        if (!Number.isFinite(lecturaInicial) || lecturaInicial < 0) {
+            await Swal.fire("Lectura inválida", "Los metros iniciales deben ser un número igual o mayor a cero.", "warning");
+            return;
+        }
+
+        const datos = new FormData();
+        datos.append("opcion", modificando ? "modificar" : "guardar");
+        datos.append("idcontrato", btnGuardar.dataset.idcontrato);
+        datos.append("nmedidor", campos.nmedidor.value.trim());
+        datos.append("inicio", campos.inicio.value);
+        datos.append("canton", campos.canton.value);
+        datos.append("ruta", campos.ruta.value);
+        datos.append("direccion", campos.direccion.value.trim());
+        datos.append("referencia", campos.referencia.value.trim());
+        datos.append("estado", campos.estado.value);
+        if (modificando) datos.append("idmedidor", btnGuardar.dataset.idmedidor);
+
+        btnGuardar.disabled = true;
+        btnCancelar.disabled = true;
+        btnGuardar.textContent = "Procesando...";
+
+        try {
+            const resultado = await consultar("DAOMedidor.php", datos, "guardar el medidor");
+            if (!resultado.estado) {
+                throw new Error(resultado.mensaje || "No se pudieron guardar los datos del medidor");
+            }
+
+            await Swal.fire("Poseidón", resultado.mensaje, "success");
+            window.location.href = "lista-medidores.php";
+        } catch (error) {
+            console.error(error);
+            await Swal.fire("No se pudo guardar", error.message, "error");
+            btnGuardar.disabled = false;
+            btnCancelar.disabled = false;
+            btnGuardar.textContent = modificando ? "Modificar" : "Guardar";
+        }
+    });
+
+    btnCancelar.addEventListener("click", () => {
+        window.location.href = "lista-medidores.php";
+    });
 
     try {
         await Promise.all([
@@ -71,7 +126,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         campos.estado.value = medidor.estado ?? "Activo";
 
         btnGuardar.textContent = medidor.idmedidor ? "Modificar" : "Guardar";
-        btnGuardar.dataset.id = medidor.idmedidor || idcontrato;
+        btnGuardar.dataset.idcontrato = idcontrato;
+        if (medidor.idmedidor) {
+            btnGuardar.dataset.idmedidor = medidor.idmedidor;
+        } else {
+            delete btnGuardar.dataset.idmedidor;
+        }
         btnGuardar.disabled = false;
     } catch (error) {
         console.error(error);
