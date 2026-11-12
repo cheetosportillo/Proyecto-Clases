@@ -116,7 +116,7 @@
             </div>
             <div class="col-12 col-md-6">
               <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="inicio" name="inicio" placeholder="Metros Iniciales (*)" min="0" step="0.01" required />
+                <input type="number" class="form-control" id="inicio" name="inicio" placeholder="Metros Iniciales (*)" min="0" step="0" required />
                 <label for="inicio">Metros Iniciales (*)</label>
               </div>
             </div>

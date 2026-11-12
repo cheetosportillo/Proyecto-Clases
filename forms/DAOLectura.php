@@ -4,6 +4,42 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $opcion = $_POST['opcion'] ?? '';
 
+if ($opcion === "consultarLecturas") {
+    require_once "../Config/Conexion.php";
+
+    try {
+        $sql = "SELECT co.idconsumo, m.nmedidor,
+                       CONCAT_WS(' ', s.nombre, s.apellido) AS socio,
+                       co.mes, co.anio, co.fecha_lectura, co.fecha_anterior,
+                       co.lectura_anterior, co.lectura_actual,
+                       (co.lectura_actual - co.lectura_anterior) AS consumo_m3,
+                       co.fecha_vencimiento, co.aviso, co.estado,
+                       CONCAT_WS(' ', e.nombre, e.apellido) AS empleado
+                FROM consumo AS co
+                LEFT JOIN medidor AS m ON m.idmedidor = co.idmedidor
+                LEFT JOIN contrato AS c ON c.idcontrato = m.idcontrato
+                LEFT JOIN socio AS s ON s.idsocio = c.idsocio
+                LEFT JOIN empleado AS e ON e.idempleado = co.idempleado
+                ORDER BY co.anio DESC, co.mes DESC, co.fecha_lectura DESC, co.idconsumo DESC";
+
+        $resultado = $conexion->query($sql);
+        $lecturas = $resultado->fetch_all(MYSQLI_ASSOC);
+        $resultado->free();
+
+        echo json_encode($lecturas, JSON_UNESCAPED_UNICODE);
+    } catch (Throwable $e) {
+        error_log("Error al consultar las lecturas: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "No se pudieron obtener las lecturas"
+        ], JSON_UNESCAPED_UNICODE);
+    } finally {
+        $conexion->close();
+    }
+    exit;
+}
+
 if ($opcion === "consultarConsumo") {
     require_once "../Config/Conexion.php";
     $nmedidor = trim($_POST['nmedidor'] ?? '');
