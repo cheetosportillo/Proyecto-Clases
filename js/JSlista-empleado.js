@@ -52,9 +52,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             { title: "DUI", field: "dui" },
             { title: "Nombre", field: "nombre" },
             { title: "Apellido", field: "apellido" },
-            { title: "Full Name", field: "nombreCompleto" },
-            { title: "Telefono", field: "telefono" },
-            { title: "Tamanio", field: "tamanio" },
+            { title: "Teléfono", field: "telefono" },
+            { title: "Sueldo", field: "sueldo" },
+            { title: "AFP", field: "afp" },
+            { title: "NUP", field: "nup" },
+            { title: "Cargo", field: "cargo" },
+            { title: "Fecha de ingreso", field: "fecha_ingreso" },
+            { title: "Renta", field: "renta" },
+            { title: "Cantón", field: "canton" },
+            { title: "ISSS", field: "num_isss" },
+            { title: "Estado", field: "estado" },
             {
                 title: "Acciones", field: "acciones", hozAlign: "center", headerSort: false,
                 formatter: function () {
@@ -105,103 +112,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                     const resultado = await respuesta.json();
 
-
-                                    if (resultado.estado) {
-                                        Swal.fire({
-                                            position: "top-end",
-                                            icon: "success",
-                                            title: "Poseidon",
-                                            text: resultado.mensaje,
-                                            showConfirmButton: false,
-                                            timer: 1500
-                                        }).then(() => {//cuando desaparece el mensaje se recarga la pagina
-                                            window.location.href = "lista-empleados.php";
-                                        });
+                                    if (!resultado.estado) {
+                                        throw new Error(resultado.mensaje || "No se pudo eliminar el empleado");
                                     }
+
+                                    Swal.fire({
+                                        position: "top-end",
+                                        icon: "success",
+                                        title: "Poseidon",
+                                        text: resultado.mensaje,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(() => {
+                                        window.location.href = "lista-empleados.php";
+                                    });
                                 } catch (error) {
+                                    console.error(error);
+                                    await Swal.fire("No se pudo eliminar", error.message, "error");
                                 }
                             }
                         });
-                    }
-                }
-            },
-            {
-                title: "Acciones", field: "acciones", hozAlign: "center", headerSort: false,
-                formatter: function () {
-                    return `
-                        <select class="form-select form-select-sm accion-empleado">
-                            <option value="">Seleccionar...</option>
-                            <option value="modificar">Modificar</option>
-                            <option value="eliminar">Eliminar</option>
-                        </select>
-                    `;
-                },
-                cellEdited: function (cell) {
-                    console.log(cell.getValue());
-                },
-            
-                cellClick: function (e, cell) {
-                    if (e.target.matches(".accion-empleado")) {
-                        e.target.onchange = function () {
-                            const accion = this.value;
-                            const empleado = cell.getRow().getData();
-            
-                            if (accion === "modificar") {
-                                location.href = "empleado.php?id=" + empleado.idempleado;
-                            }
-            
-                            if (accion === "eliminar") {
-                                Swal.fire({
-                                    title: "Poseidon",
-                                    text: "Confirmar Eliminacion de Registro?",
-                                    icon: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#3085d6",
-                                    cancelButtonColor: "#d33",
-                                    confirmButtonText: "Si, Confirmo"
-                                }).then(async (result) => {
-                                    if (result.isConfirmed) {
-                                        try {
-        
-                                            const datos = new FormData();
-        
-                                            datos.append("idempleado", empleado.idempleado);
-                                            datos.append("opcion", "eliminar");
-        
-                                            const respuesta = await fetch("DAOEmpleado.php", {
-                                                method: "POST",
-                                                body: datos
-                                            });
-        
-                                            //verificar respuesta
-        
-                                            if (!respuesta.ok) {
-                                                throw new Error("Error de Comunicacion" + respuesta.status);
-                                            }
-        
-                                            const resultado = await respuesta.json();
-        
-        
-                                            if (resultado.estado) {
-                                                Swal.fire({
-                                                    position: "top-end",
-                                                    icon: "success",
-                                                    title: "Poseidon",
-                                                    text: resultado.mensaje,
-                                                    showConfirmButton: false,
-                                                    timer: 1500
-                                                }).then(() => {//cuando desaparece el mensaje se recarga la pagina
-                                                    window.location.href = "lista-empleados.php";
-                                                });
-                                            }
-                                        } catch (error) {
-                                        }
-                                    }
-                                });
-                            }
-            
-                            //this.value = "";
-                        };
                     }
                 }
             }
@@ -221,71 +151,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     tabla.on("dataFiltered", function (filters, filas) {
         contador.textContent = `Total de Registros: ${filas.length}`;
     });
-
-    contenedor.addEventListener("change", function (e) {
-        if (!e.target.matches("select.accion-empleado")) return;
-
-        const accion = e.target.value;
-        const fila = tabla.getRow(e.target.closest(".tabulator-row"));
-
-        if (!fila || !accion) return;
-
-        const empleado = fila.getData();
-
-        if (accion === "modificar") {
-            location.href = "empleado.php?id=" + empleado.idempleado;
-        } else if (accion === "eliminar") {
-            Swal.fire({
-                title: "Poseidon",
-                text: "Confirmar Eliminacion de Registro?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Si, Confirmo"
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-
-                        const datos = new FormData();
-
-                        datos.append("idempleado", empleado.idempleado);
-                        datos.append("opcion", "eliminar");
-
-                        const respuesta = await fetch("DAOEmpleado.php", {
-                            method: "POST",
-                            body: datos
-                        });
-
-                        //verificar respuesta
-
-                        if (!respuesta.ok) {
-                            throw new Error("Error de Comunicacion" + respuesta.status);
-                        }
-
-                        const resultado = await respuesta.json();
-
-
-                        if (resultado.estado) {
-                            Swal.fire({
-                                position: "top-end",
-                                icon: "success",
-                                title: "Poseidon",
-                                text: resultado.mensaje,
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {//cuando desaparece el mensaje se recarga la pagina
-                                window.location.href = "lista-empleados.php";
-                            });
-                        }
-                    } catch (error) {
-                    }
-                }
-            });
-
-        }
-    });
-
 
     try {
 
@@ -340,8 +205,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     { field: "nombre", type: "like", value: valor },
                     { field: "apellido", type: "like", value: valor },
                     { field: "telefono", type: "like", value: valor },
-                    { field: "nombreCompleto", type: "like", value: valor },
-                    { field: "tamanio", type: "like", value: valor }
+                    { field: "sueldo", type: "like", value: valor },
+                    { field: "afp", type: "like", value: valor },
+                    { field: "nup", type: "like", value: valor },
+                    { field: "cargo", type: "like", value: valor },
+                    { field: "fecha_ingreso", type: "like", value: valor },
+                    { field: "renta", type: "like", value: valor },
+                    { field: "canton", type: "like", value: valor },
+                    { field: "num_isss", type: "like", value: valor },
+                    { field: "estado", type: "like", value: valor }
                 ]
             ]);
         });
@@ -354,9 +226,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 });
-
-
-
-
-
 

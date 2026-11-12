@@ -6,12 +6,27 @@ $paginasRuta = [
     'ruta.php',
     'lista-ruta.php'
 ];
-
 $menuRutaActivo = in_array($paginaActual, $paginasRuta);
+
+// Páginas del menú Configuración > Canton
+$paginasCanton = [
+    'canton.php',
+    'lista-canton.php'
+];
+$menuCantonActivo = in_array($paginaActual, $paginasCanton);
+
+// Páginas del menú Configuración > Cargo
+$paginasCargo = [
+    'cargo.php',
+    'lista-cargo.php'
+];
+$menuCargoActivo = in_array($paginaActual, $paginasCargo);
 
 // Páginas del menú Configuración, merge agrega mas opciones al vector
 $paginasConfiguracion = array_merge(
     $paginasRuta,
+    $paginasCanton,
+    $paginasCargo,
     ['empresa.php', 'editors.php']
 );
 
@@ -23,7 +38,8 @@ $menuConfiguracionActivo = in_array(
 // Páginas del menú Empleado
 $paginasEmpleado = [
     'empleado.php',
-    'lista-empleados.php'
+    'lista-empleados.php',
+    'asignarRuta.php'
 ];
 
 $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
@@ -60,6 +76,7 @@ $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
             <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
 
+                <!-- CONFIGURACIÓN -->
                 <li class="nav-item <?= $menuConfiguracionActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuConfiguracionActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-circle-fill"></i>
@@ -68,7 +85,9 @@ $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">                        
+                    <ul class="nav nav-treeview">
+
+                        <!-- RUTA -->
                         <li class="nav-item <?= $menuRutaActivo ? 'menu-open' : '' ?>">
                             <a href="#" class="nav-link <?= $menuRutaActivo ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-circle"></i>
@@ -92,11 +111,61 @@ $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
                                 </li>
                             </ul>
                         </li>
-                        
+
+                        <!-- CANTON -->
+                        <li class="nav-item <?= $menuCantonActivo ? 'menu-open' : '' ?>">
+                            <a href="#" class="nav-link <?= $menuCantonActivo ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-crosshair"></i>
+                                <p>
+                                    Canton
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="canton.php" class="nav-link <?= $paginaActual == 'canton.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-file-earmark-plus"></i>
+                                        <p>Nuevo Canton</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="lista-canton.php" class="nav-link <?= $paginaActual == 'lista-canton.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-list"></i>
+                                        <p>Consultar</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- CARGO -->
+                        <li class="nav-item <?= $menuCargoActivo ? 'menu-open' : '' ?>">
+                            <a href="#" class="nav-link <?= $menuCargoActivo ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-briefcase"></i>
+                                <p>
+                                    Cargo
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="cargo.php" class="nav-link <?= $paginaActual == 'cargo.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-file-earmark-plus"></i>
+                                        <p>Nuevo Cargo</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="lista-cargo.php" class="nav-link <?= $paginaActual == 'lista-cargo.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-list"></i>
+                                        <p>Consultar</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </li>
 
-
+                <!-- EMPLEADO -->
                 <li class="nav-item <?= $menuEmpleadoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuEmpleadoActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-box-arrow-in-right"></i>
@@ -118,144 +187,18 @@ $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
                                 <p>Consulta</p>
                             </a>
                         </li>
-                    </ul>
-                </li>
-
-                <!--
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-speedometer"></i>
-                        <p>
-                            Dashboard
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="../index.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Dashboard v1</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../index2.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Dashboard v2</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../index3.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Dashboard v3</p>
+                            <a href="asignarRuta.php" class="nav-link <?= $paginaActual == 'asignarRuta.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-signpost-split"></i>
+                                <p>Asignar Ruta</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="../starter.html" class="nav-link">
-                        <i class="nav-icon bi bi-file-earmark"></i>
-                        <p>Starter Page</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="../generate/theme.html" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Theme Generate</p>
-                    </a>
-                </li>
-                
-                
 
-                <li class="nav-header">MULTI LEVEL EXAMPLE</li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-circle-fill"></i>
-                        <p>Level 1</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-circle-fill"></i>
-                        <p>
-                            Level 1
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>
-                                    Level 2
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-record-circle-fill"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-record-circle-fill"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-record-circle-fill"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-circle-fill"></i>
-                        <p>Level 1</p>
-                    </a>
-                </li>
-
-                <li class="nav-header">LABELS</li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-circle text-danger"></i>
-                        <p class="text">Important</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-circle text-warning"></i>
-                        <p>Warning</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-circle text-info"></i>
-                        <p>Informational</p>
-                    </a>
-                </li>
-            </ul>-->
-
-                <!--end::Sidebar Menu-->
-
-
+            </ul>
+            <!--end::Sidebar Menu-->
         </nav>
     </div>
+    <!--end::Sidebar Wrapper-->
 </aside>
