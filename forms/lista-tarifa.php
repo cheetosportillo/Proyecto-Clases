@@ -24,7 +24,6 @@
             </div>
             <div class="card-body">
               <div class="d-flex gap-2 mb-3">
-                <a href="tarifa.php" class="btn btn-sm btn-primary">Nueva Tarifa</a>
                 <button id="print-table" type="button" class="btn btn-sm btn-outline-secondary">Imprimir</button>
               </div>
               <div id="users-table"></div>

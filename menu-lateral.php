@@ -237,7 +237,7 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
                         <li class="nav-item">
                             <a href="tiraje.php" class="nav-link <?= $menuTirajeActivo ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-currency-dollar"></i>
-                                <p>Número Recibos</p>
+                                <p>Tiraje de Recibos</p>
                             </a>
                         </li>
 

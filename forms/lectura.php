@@ -5,6 +5,8 @@
   <title>Sistema de Agua - POSEIDÓN | Toma de Lectura</title>
   <script src="../js/color-thema.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/styles/overlayscrollbars.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="../css/adminlte.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -109,7 +111,11 @@
     </main>
     <?php include "../pie.php"; ?>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
   <script src="../js/adminlte.js"></script>
+  <script src="../js/para-el-menu.js"></script>
   <script src="../js/JSlectura.js?v=<?php echo filemtime('../js/JSlectura.js'); ?>"></script>
 </body>
 </html>
