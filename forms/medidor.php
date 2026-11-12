@@ -1,4 +1,32 @@
-<!-- forms/medidor.php (Fragmento Principal) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Sistema de Agua - POSEIDÓN</title>
+  <script src="../js/color-thema.js"></script>
+  <link rel="preload" href="../css/adminlte.css" as="style" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.3.0/index.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/styles/overlayscrollbars.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="../css/adminlte.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+  <div class="app-wrapper">
+    <?php
+    include "../menu-cabecera.php";
+    include "../menu-lateral.php";
+    ?>
+    <main class="app-main">
+      <div class="app-content-header">
+        <div class="container-fluid">
+          <div class="row"></div>
+        </div>
+      </div>
+      <div class="app-content">
+        <div class="container-fluid">
 <form id="formulario" name="formulario" method="POST" action="#" autocomplete="off">
   <div class="row g-4">
     <div class="col-12">
@@ -111,4 +139,16 @@
     </div>
   </div>
 </form>
-<script src="../js/JSMedidor.js?v=<?php echo filemtime('../js/JSMedidor.js'); ?>"></script>
+        </div>
+      </div>
+    </main>
+    <?php include "../pie.php"; ?>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  <script src="../js/adminlte.js"></script>
+  <script src="../js/para-el-menu.js"></script>
+  <script src="../js/JSMedidor.js?v=<?php echo filemtime('../js/JSMedidor.js'); ?>"></script>
+</body>
+</html>

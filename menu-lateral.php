@@ -63,7 +63,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 // Páginas del menú Medidor
 $paginasMedidor = [
     'medidor.php',
-    'lista-contrato.php'
+    'lista-medidores.php'
 ];
 
 $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
@@ -281,7 +281,7 @@ $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="lista-contrato.php" class="nav-link <?= $paginaActual == 'lista-contrato.php' ? 'active' : '' ?>">
+                            <a href="lista-medidores.php" class="nav-link <?= $paginaActual == 'lista-medidores.php' ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-list"></i>
                                 <p>Consulta</p>
                             </a>
