@@ -44,6 +44,14 @@ $paginasEmpleado = [
 
 $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
 
+// Páginas del menú Socio
+$paginasSocio = [
+    'socio.php',
+    'lista-socio.php'
+];
+
+$menuSocioActivo = in_array($paginaActual, $paginasSocio);
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -191,6 +199,31 @@ $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
                             <a href="asignarRuta.php" class="nav-link <?= $paginaActual == 'asignarRuta.php' ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-signpost-split"></i>
                                 <p>Asignar Ruta</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- SOCIO -->
+                <li class="nav-item <?= $menuSocioActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuSocioActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-person"></i>
+                        <p>
+                            Socio
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="socio.php" class="nav-link <?= $paginaActual == 'socio.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-person-plus"></i>
+                                <p>Nuevo</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="lista-socio.php" class="nav-link <?= $paginaActual == 'lista-socio.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Consulta</p>
                             </a>
                         </li>
                     </ul>
