@@ -52,6 +52,14 @@ $paginasSocio = [
 
 $menuSocioActivo = in_array($paginaActual, $paginasSocio);
 
+// Páginas del menú Contrato
+$paginasContrato = [
+    'contrato.php',
+    'lista-contrato.php'
+];
+
+$menuContratoActivo = in_array($paginaActual, $paginasContrato);
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -222,6 +230,31 @@ $menuSocioActivo = in_array($paginaActual, $paginasSocio);
                         </li>
                         <li class="nav-item">
                             <a href="lista-socio.php" class="nav-link <?= $paginaActual == 'lista-socio.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Consulta</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- CONTRATO -->
+                <li class="nav-item <?= $menuContratoActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuContratoActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-file-earmark-text"></i>
+                        <p>
+                            Contrato
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="contrato.php" class="nav-link <?= $paginaActual == 'contrato.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>Nuevo</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="lista-contrato.php" class="nav-link <?= $paginaActual == 'lista-contrato.php' ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-list"></i>
                                 <p>Consulta</p>
                             </a>
